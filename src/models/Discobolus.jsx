@@ -6,15 +6,20 @@ Command: npx gltfjsx@6.5.3 public/discobolus.glb
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { useControls } from "leva";
 
 export default function DiscobolousModel(props) {
   const { nodes, materials } = useGLTF("/discobolus.glb");
+
+  const { moveSpeed } = useControls({
+    moveSpeed: { value: 0.5, min: 0.01, max: 10, step: 0.01 },
+  });
 
   const statref = useRef();
 
   useFrame((state, delta) => {
     if (statref.current) {
-      statref.current.rotation.z += delta * 0.5;
+      statref.current.rotation.z += delta * moveSpeed;
     }
   });
 
