@@ -9,10 +9,10 @@ import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
 import { computeProjectedBounds } from "../ComputeProjectedBounds";
 
-const modelPath = `${import.meta.env.BASE_URL}r3f-pretext-art/discobolus.glb`;
+const modelPath = `${import.meta.env.BASE_URL}discobolus.glb`;
 
 export default function DiscobolousModel({ onProjectedBounds, ...props }) {
-  const { nodes, materials } = useGLTF("/discobolus.glb");
+  const { nodes, materials } = useGLTF(modelPath);
 
   const { moveSpeed } = useControls("Model", {
     moveSpeed: { value: 0.5, min: 0.01, max: 10, step: 0.01 },
