@@ -6,6 +6,11 @@ import {
   AsciiRenderer,
 } from "@react-three/drei";
 import { useControls } from "leva";
+import {
+  EffectComposer,
+  DotScreen,
+  Pixelation,
+} from "@react-three/postprocessing";
 
 import DiscobolousModel from "./models/Discobolus.jsx";
 
@@ -22,10 +27,18 @@ export function App() {
   });
 
   const { mode, inverted, res } = useControls("Rendering Style", {
-    mode: { options: ["norm", "ASCII", "blocks"] },
+    mode: { options: ["norm", "ASCII", "blocks", "dither"] },
     inverted: true,
     res: { value: 0.15, min: 0.05, max: 0.5, step: 0.01 },
   });
+
+  const { ditherStrength } = useControls(
+    "Dither Effect",
+    {
+      ditherStrength: { value: 0.5, min: 0, max: 1, step: 0.01 },
+    },
+    { collapsed: true },
+  );
 
   let asciiChars = "  .:-+*=%@#";
   let assciiInvertedChars = "  #@%=*+-:.";
@@ -54,7 +67,7 @@ export function App() {
           />
         </Center>
 
-        {mode !== "norm" && (
+        {(mode === "ASCII" || mode === "blocks") && (
           <AsciiRenderer
             key={`${mode}-${inverted}-${res}`} // NOTE: this fixed a bug that I has when I switch to inverted it ignores the fg and bg colors
             fgColor="white"
@@ -62,6 +75,13 @@ export function App() {
             characters={inverted ? invertedChars : chars}
             resolution={res}
           />
+        )}
+
+        {mode === "dither" && (
+          <EffectComposer>
+            <Pixelation />
+            <DotScreen angle={Math.PI / 4} scale={ditherStrength} />
+          </EffectComposer>
         )}
       </Canvas>
     </>
