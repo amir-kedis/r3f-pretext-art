@@ -7,25 +7,51 @@ import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
+import { computeProjectedBounds } from "../ComputeProjectedBounds";
 
-export default function DiscobolousModel(props) {
+export default function DiscobolousModel({ onProjectedBounds, ...props }) {
   const { nodes, materials } = useGLTF("/discobolus.glb");
 
   const { moveSpeed } = useControls("Model", {
     moveSpeed: { value: 0.5, min: 0.01, max: 10, step: 0.01 },
   });
 
-  const statref = useRef();
+  const statRef = useRef();
+  const meshRef = useRef();
+
+  const prefBounds = useRef(null);
 
   useFrame((state, delta) => {
-    if (statref.current) {
-      statref.current.rotation.z += delta * moveSpeed;
+    if (statRef.current) {
+      statRef.current.rotation.z += delta * moveSpeed;
+    }
+
+    if (onProjectedBounds && meshRef.current) {
+      const projectedBounds = computeProjectedBounds(
+        meshRef.current,
+        state.camera,
+        state.size,
+      );
+
+      const previous = prefBounds.current;
+      if (
+        !previous ||
+        projectedBounds.left !== previous.left ||
+        projectedBounds.right !== previous.right ||
+        projectedBounds.top !== previous.top ||
+        projectedBounds.bottom !== previous.bottom
+      ) {
+        // If changed in other words
+        prefBounds.current = projectedBounds;
+        onProjectedBounds(projectedBounds);
+      }
     }
   });
 
   return (
-    <group ref={statref} {...props} dispose={null}>
+    <group ref={statRef} {...props} dispose={null}>
       <mesh
+        ref={meshRef}
         geometry={nodes.empty_2.geometry}
         material={nodes.empty_2.material}
       />

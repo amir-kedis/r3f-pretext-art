@@ -74,6 +74,7 @@ export function App() {
           <DiscobolousModel
             scale={scale}
             rotation={[rotateX, rotateY, rotateZ]}
+            onProjectedBounds={(bounds) => {}}
           />
         </Center>
 
