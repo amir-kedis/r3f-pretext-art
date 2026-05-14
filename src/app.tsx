@@ -1,5 +1,10 @@
 import { Canvas } from "@react-three/fiber";
-import { Environment, Center, OrbitControls } from "@react-three/drei";
+import {
+  Environment,
+  Center,
+  OrbitControls,
+  AsciiRenderer,
+} from "@react-three/drei";
 import { useControls } from "leva";
 
 import DiscobolousModel from "./models/Discobolus.jsx";
@@ -11,15 +16,27 @@ export function App() {
     rotateY: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
     rotateZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
   });
+
   const { scale } = useControls("Statue Scale", {
     scale: { value: 0.06, min: 0.01, max: 1, step: 0.01 },
   });
+
+  const { mode, inverted, res } = useControls("Rendering Style", {
+    mode: { options: ["norm", "ASCII"] },
+    inverted: true,
+    res: { value: 0.15, min: 0.05, max: 0.5, step: 0.01 },
+  });
+
+  let chars = "  .:-+*=%@#";
+  // let chars = "   ░▒▓█";
+  let invertedChars = "  #@%=*+-:.";
 
   return (
     <>
       <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
         {/* NOTE: this the line that added the lights to the environment so that we can see */}
         <Environment preset="city" />
+        <color attach="background" args={["#0a0a0a"]} />
 
         {/* NOTE: Allows camera movement using mouse */}
         <OrbitControls />
@@ -31,6 +48,16 @@ export function App() {
             rotation={[rotateX, rotateY, rotateZ]}
           />
         </Center>
+
+        {mode === "ASCII" && (
+          <AsciiRenderer
+            key={`${inverted}-${res}`} // NOTE: this fixed a bug that I has when I switch to inverted it ignores the fg and bg colors
+            fgColor="white"
+            bgColor="black"
+            characters={inverted ? invertedChars : chars}
+            resolution={res}
+          />
+        )}
       </Canvas>
     </>
   );
