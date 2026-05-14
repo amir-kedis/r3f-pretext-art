@@ -11,13 +11,13 @@ import DiscobolousModel from "./models/Discobolus.jsx";
 
 export function App() {
   // NOTE: very fancy cool version of ImGUI, seriously how did I live before knowing this
-  const { rotateX, rotateY, rotateZ } = useControls("Statue Rotation", {
+  const { rotateX, rotateY, rotateZ } = useControls("Model", {
     rotateX: { value: -0.5 * Math.PI, min: -Math.PI, max: Math.PI, step: 0.01 },
     rotateY: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
     rotateZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
   });
 
-  const { scale } = useControls("Statue Scale", {
+  const { scale } = useControls("Model", {
     scale: { value: 0.05, min: 0.01, max: 1, step: 0.01 },
   });
 

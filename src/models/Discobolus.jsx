@@ -11,7 +11,7 @@ import { useControls } from "leva";
 export default function DiscobolousModel(props) {
   const { nodes, materials } = useGLTF("/discobolus.glb");
 
-  const { moveSpeed } = useControls({
+  const { moveSpeed } = useControls("Model", {
     moveSpeed: { value: 0.5, min: 0.01, max: 10, step: 0.01 },
   });
 
