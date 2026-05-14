@@ -4,6 +4,7 @@ import {
   Center,
   OrbitControls,
   AsciiRenderer,
+  Html,
 } from "@react-three/drei";
 import { useControls } from "leva";
 import {
@@ -101,6 +102,19 @@ export function App() {
             </EffectComposer>
           )}
         </>
+        <Html center>
+          <div
+            style={{
+              color: "white",
+              fontSize: "4em",
+              fontFamily: '"Metamorphous", serif',
+              width: "50vw",
+              textAlign: "center",
+            }}
+          >
+            We suffer more in imagination than in reality
+          </div>
+        </Html>
       </Canvas>
     </>
   );
