@@ -80,7 +80,7 @@ export function App() {
           <AsciiRenderer
             key={`${mode}-${inverted}-${res}`} // NOTE: this fixed a bug that I has when I switch to inverted it ignores the fg and bg colors
             fgColor="white"
-            bgColor="black"
+            bgColor="#0a0a0a"
             characters={inverted ? invertedChars : chars}
             resolution={res}
           />
