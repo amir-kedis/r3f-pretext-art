@@ -9,6 +9,8 @@ import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
 import { computeProjectedBounds } from "../ComputeProjectedBounds";
 
+const modelPath = `${import.meta.env.BASE_URL}discobolus.glb`;
+
 export default function DiscobolousModel({ onProjectedBounds, ...props }) {
   const { nodes, materials } = useGLTF("/discobolus.glb");
 
@@ -59,4 +61,4 @@ export default function DiscobolousModel({ onProjectedBounds, ...props }) {
   );
 }
 
-useGLTF.preload("./discobolus.glb");
+useGLTF.preload(modelPath);
