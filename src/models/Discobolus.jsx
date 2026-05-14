@@ -59,4 +59,4 @@ export default function DiscobolousModel({ onProjectedBounds, ...props }) {
   );
 }
 
-useGLTF.preload("/discobolus.glb");
+useGLTF.preload("./discobolus.glb");
