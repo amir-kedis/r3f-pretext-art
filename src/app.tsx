@@ -13,6 +13,7 @@ import {
 } from "@react-three/postprocessing";
 
 import DiscobolousModel from "./models/Discobolus.jsx";
+import { HologramShader } from "./HologramShader.jsx";
 
 export function App() {
   // NOTE: very fancy cool version of ImGUI, seriously how did I live before knowing this
@@ -27,7 +28,7 @@ export function App() {
   });
 
   const { mode, inverted, res } = useControls("Rendering Style", {
-    mode: { options: ["norm", "ASCII", "blocks", "dither"] },
+    mode: { options: ["norm", "ASCII", "blocks", "dither", "hologram"] },
     inverted: true,
     res: { value: 0.15, min: 0.05, max: 0.5, step: 0.01 },
   });
@@ -36,6 +37,14 @@ export function App() {
     "Dither Effect",
     {
       ditherStrength: { value: 0.5, min: 0, max: 1, step: 0.01 },
+    },
+    { collapsed: true },
+  );
+
+  const { hologramGlitchIntensity } = useControls(
+    "Hologram Effect",
+    {
+      hologramGlitchIntensity: { value: 1.5, min: 0.0, max: 5.0, step: 0.1 },
     },
     { collapsed: true },
   );
@@ -77,12 +86,21 @@ export function App() {
           />
         )}
 
-        {mode === "dither" && (
-          <EffectComposer>
-            <Pixelation />
-            <DotScreen angle={Math.PI / 4} scale={ditherStrength} />
-          </EffectComposer>
-        )}
+        <>
+          {(mode === "dither" || mode === "hologram") && (
+            <EffectComposer>
+              {mode === "dither" && (
+                <>
+                  <Pixelation />
+                  <DotScreen angle={Math.PI / 4} scale={ditherStrength} />
+                </>
+              )}
+              {mode === "hologram" && (
+                <HologramShader glitchIntensity={hologramGlitchIntensity} />
+              )}
+            </EffectComposer>
+          )}
+        </>
       </Canvas>
     </>
   );
