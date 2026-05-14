@@ -18,18 +18,23 @@ export function App() {
   });
 
   const { scale } = useControls("Statue Scale", {
-    scale: { value: 0.06, min: 0.01, max: 1, step: 0.01 },
+    scale: { value: 0.05, min: 0.01, max: 1, step: 0.01 },
   });
 
   const { mode, inverted, res } = useControls("Rendering Style", {
-    mode: { options: ["norm", "ASCII"] },
+    mode: { options: ["norm", "ASCII", "blocks"] },
     inverted: true,
     res: { value: 0.15, min: 0.05, max: 0.5, step: 0.01 },
   });
 
-  let chars = "  .:-+*=%@#";
-  // let chars = "   ░▒▓█";
-  let invertedChars = "  #@%=*+-:.";
+  let asciiChars = "  .:-+*=%@#";
+  let assciiInvertedChars = "  #@%=*+-:.";
+  let blocksChars = "  ░▒▓█";
+  let blocksInvertedChars = "  █▓▒░";
+
+  let chars = mode === "ASCII" ? asciiChars : blocksChars;
+  let invertedChars =
+    mode === "ASCII" ? assciiInvertedChars : blocksInvertedChars;
 
   return (
     <>
@@ -49,9 +54,9 @@ export function App() {
           />
         </Center>
 
-        {mode === "ASCII" && (
+        {mode !== "norm" && (
           <AsciiRenderer
-            key={`${inverted}-${res}`} // NOTE: this fixed a bug that I has when I switch to inverted it ignores the fg and bg colors
+            key={`${mode}-${inverted}-${res}`} // NOTE: this fixed a bug that I has when I switch to inverted it ignores the fg and bg colors
             fgColor="white"
             bgColor="black"
             characters={inverted ? invertedChars : chars}
