@@ -15,8 +15,12 @@ import {
 
 import DiscobolousModel from "./models/Discobolus.jsx";
 import { HologramShader } from "./HologramShader.jsx";
+import { PretextEl } from "./PretextEl.js";
+import { useState } from "react";
 
 export function App() {
+  const [modelBounds, setModelBounds] = useState(null);
+
   // NOTE: very fancy cool version of ImGUI, seriously how did I live before knowing this
   const { rotateX, rotateY, rotateZ } = useControls("Model", {
     rotateX: { value: -0.5 * Math.PI, min: -Math.PI, max: Math.PI, step: 0.01 },
@@ -50,6 +54,20 @@ export function App() {
     { collapsed: true },
   );
 
+  const { enabled, textWidth, fontSize, text } = useControls(
+    "pretext",
+    {
+      enabled: { value: true },
+      textWidth: { value: 960, min: 360, max: 1400, step: 10 },
+      fontSize: { value: 24, min: 14, max: 40, step: 1 },
+      text: {
+        value:
+          "“I have seen the beauty of good, and the ugliness of evil, and have recognized that the wrongdoer has a nature related to my own—not a kinship of blood or birth, but of the same mind, and possessing a share of the divine. And so none of them can hurt me. No one can implicate me in ugliness. Nor can I feel angry at my relative, or hate him.” – Marcus Aurelius",
+      },
+    },
+    { collapsed: false },
+  );
+
   let asciiChars = "  .:-+*=%@#";
   let assciiInvertedChars = "  #@%=*+-:.";
   let blocksChars = "  ░▒▓█";
@@ -60,8 +78,18 @@ export function App() {
     mode === "ASCII" ? assciiInvertedChars : blocksInvertedChars;
 
   return (
-    <>
-      <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <Canvas
+        style={{ position: "absolute", inset: 0 }}
+        camera={{ position: [0, 0, 10], fov: 50 }}
+      >
         {/* NOTE: this the line that added the lights to the environment so that we can see */}
         <Environment preset="city" />
         <color attach="background" args={["#0a0a0a"]} />
@@ -74,7 +102,7 @@ export function App() {
           <DiscobolousModel
             scale={scale}
             rotation={[rotateX, rotateY, rotateZ]}
-            onProjectedBounds={(bounds) => {}}
+            onProjectedBounds={setModelBounds}
           />
         </Center>
 
@@ -103,20 +131,15 @@ export function App() {
             </EffectComposer>
           )}
         </>
-        <Html center>
-          <div
-            style={{
-              color: "white",
-              fontSize: "4em",
-              fontFamily: '"Metamorphous", serif',
-              width: "50vw",
-              textAlign: "center",
-            }}
-          >
-            We suffer more in imagination than in reality
-          </div>
-        </Html>
       </Canvas>
-    </>
+
+      <PretextEl
+        content={text}
+        object={modelBounds}
+        enabled={enabled}
+        textWidth={textWidth}
+        fontSize={fontSize}
+      />
+    </div>
   );
 }
