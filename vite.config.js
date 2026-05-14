@@ -6,6 +6,6 @@ import glsl from "vite-plugin-glsl";
 export default defineConfig({
   plugins: [react(), basicSsl(), glsl()],
   resolve: { dedupe: ["three"] },
-  base: "./",
+  base: "/r3f-pretext-art/",
   server: { host: true },
 });
